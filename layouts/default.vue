@@ -1,5 +1,5 @@
 <template>
-    <div class="md:w-2/3 md:m-auto w-full">
+    <div class="lg:w-2/3 lg:m-auto w-full">
         <header>
             <nav class="flex items-center justify-between px-8 py-4">
                 <h1 class="text-3xl font-semibold cursor-pointer transition hover:text-pink-500" @click="goToPage('/')">Fashion</h1>

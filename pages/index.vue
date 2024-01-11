@@ -40,18 +40,18 @@
                 },
                 }"
             >
-                <SwiperSlide class="" v-for="slide in 8" :key="slide">
-                    <div class="p-4 mx-2 mt-2 mb-6 rounded-lg shadow-lg max-w-96 bg-white transition cursor-pointer hover:shadow-xl">
+                <SwiperSlide class="" v-for="(product, index) in products" :key="index">
+                    <div class="p-4 mx-2 mt-2 mb-6 rounded-lg shadow-lg max-w-96 bg-white transition cursor-pointer hover:shadow-xl" @click="goToProduct(product)">
                         <div class="grid grid-cols-2 gap-4">
-                            <NuxtImg class="row-span-2 h-full w-full object-cover rounded-lg object-left" src="/img/me.jpg" width="300" height="300" format="webp" quality="50" />
+                            <NuxtImg class="row-span-2 h-full w-full object-cover rounded-lg object-left productImage" :class="{active: animationStore.productActive?.id === product.id}" src="/img/me.jpg" width="300" height="300" format="webp" quality="50" />
                             <NuxtImg class="w-full h-full object-cover rounded-lg object-left" src="/img/me.jpg" width="300" height="300" format="webp" quality="50" />
                             <NuxtImg class="w-full h-full object-cover rounded-lg object-left" src="/img/me_2.jpg" width="300" height="300" format="webp" quality="50" />
                         </div>
                         <div class="pt-4">
                             <span class="text-pink-500" data-swiper-parallax="-100">Vidéo</span>
                             <div class="flex items-center justify-between" data-swiper-parallax="-200">
-                                <h3 class="font-semibold text-xl" >Titre</h3>
-                                <span class="text-pink-500 text-xl font-semibold">55€</span>
+                                <h3 class="font-semibold text-xl" :class="{active: animationStore.productActive?.id === product.id}">Titre</h3>
+                                <span class="text-pink-500 text-xl font-semibold productPrice" :class="{active: animationStore.productActive?.id === product.id}">{{ product.price }}€</span>
                             </div>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
             <div class="flex items-center justify-between max-md:px-8 ">
                 <h2 class="font-bold text-xl py-4">Mes réseaux</h2>
             </div>
-            <div class="grid grid-cols-4 gap-4">
+            <div class="grid grid-cols-4 gap-4 max-md:grid-cols-2 max-md:px-8">
                 <div class="rounded-lg shadow-lg p-4 flex items-center justify-center h-32 cursor-pointer transition hover:shadow-xl">
                     <NuxtImg class="w-full object-cover object-left" src="/img/OnlyFans.svg" width="166" height="30" />
                 </div>
@@ -188,4 +188,45 @@ onMounted(() => {
         detectWidthScreenSlideTwo();
     })
 })
+
+const {data: products} = await useAsyncData(async () => {
+    const response = [{
+        id: 1,
+        name: 'Queen Rose - Pink',
+        image: 'https://picsum.photos/500/500',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam tincidunt, nunc nisl ultrices odio, nec aliquam eros nisl eu nunc.',
+        price: 55,
+        quantity: true
+    },
+    {
+        id: 2,
+        name: 'Queen Rose - Pink',
+        image: 'https://picsum.photos/500/500',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam quis aliquam tincidunt, nunc nisl ultrices odio, nec aliquam eros nisl eu nunc.',
+        price: 55,
+        quantity: true
+    }]
+    return response
+})
+
+function goToProduct(product: any): void{
+    animationStore.setProductActive(product)
+    goToPage(`/product/${product.name}`)
+}
+const animationStore = useAnimationStore()
 </script>
+
+<style scoped>
+h3.active{
+    view-transition-name: product-title;
+    contain: layout;
+}
+.productPrice.active{
+    view-transition-name: product-price;
+    contain: layout;
+}
+.productImage.active{
+    view-transition-name: product-image;
+    contain: layout;
+}
+</style>
